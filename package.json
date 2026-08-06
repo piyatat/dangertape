@@ -1,0 +1,41 @@
+{
+  "name": "dangertape",
+  "version": "1.0.0",
+  "description": "Replay agent session tool calls and flag destructive patterns.",
+  "type": "module",
+  "bin": {
+    "dangertape": "./bin/dangertape.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "fixtures",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node bin/dangertape.js",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "agent",
+    "session",
+    "transcript",
+    "security",
+    "cli",
+    "tool-calls",
+    "audit"
+  ],
+  "author": "Piyatat",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "typescript": "^5.7.3"
+  }
+}
