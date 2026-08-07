@@ -88,7 +88,8 @@ Exit codes:
 
 Pattern pack:
   shell   rm -rf, mkfs, dd if=, curl|bash / wget|sh, chmod 777
-  git     push --force / -f, reset --hard to main|master, clean -fdx,
+  git     push --force / -f, reset --hard (discards work), restore . / checkout -- .,
+          reset --hard to main|master, clean -fdx,
           push --delete / :ref deleting main|master
   sql     DROP TABLE/DATABASE/…, TRUNCATE
   secret  sk- keys, Bearer tokens, API key assignments, AKIA…

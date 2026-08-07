@@ -131,6 +131,30 @@ const GIT_PATTERNS: Pattern[] = [
       ),
   },
   {
+    id: 'git-reset-hard',
+    severity: 'high',
+    title: 'Hard reset (discards uncommitted work)',
+    category: 'git',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bgit\s+reset\s+--hard\b(?![^\n]*\b(origin\/)?(main|master)\b)/i,
+        t,
+      ),
+  },
+  {
+    id: 'git-discard-working-tree',
+    severity: 'high',
+    title: 'Discard all working-tree changes',
+    category: 'git',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bgit\s+(restore\s+\.|checkout\s+--\s+\.|checkout\s+\.\s*$|restore\s+--(?:source=HEAD\s+)?(?:\.\s*$|--worktree\s+\.))/i,
+        t,
+      ),
+  },
+  {
     id: 'git-delete-main-local',
     severity: 'high',
     title: 'Delete local main/master branch',
