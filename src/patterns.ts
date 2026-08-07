@@ -106,6 +106,18 @@ const GIT_PATTERNS: Pattern[] = [
         t,
       ),
   },
+  {
+    id: 'git-clean-fdx',
+    severity: 'critical',
+    title: 'git clean with force + directories + ignored (-fdx)',
+    category: 'git',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bgit\s+clean\b[^\n]*-(?:[^\s]*f[^\s]*d[^\s]*x|[^\s]*f[^\s]*x[^\s]*d|[^\s]*d[^\s]*f[^\s]*x|[^\s]*d[^\s]*x[^\s]*f|[^\s]*x[^\s]*f[^\s]*d|[^\s]*x[^\s]*d[^\s]*f)[^\s]*\b/i,
+        t,
+      ),
+  },
 ]
 
 /** Destructive SQL. */
