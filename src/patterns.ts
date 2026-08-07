@@ -166,6 +166,18 @@ const GIT_PATTERNS: Pattern[] = [
         t,
       ),
   },
+  {
+    id: 'git-stash-drop',
+    severity: 'high',
+    title: 'Drop git stash entries (stash drop/clear)',
+    category: 'git',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bgit\s+stash\s+(drop|clear)\b/i,
+        t,
+      ),
+  },
 ]
 
 /** Destructive SQL. */

@@ -11,7 +11,7 @@ Replay **agent session** tool calls and flag destructive patterns before they be
 Agent sessions run `Shell`, `Bash`, and SQL helpers with little human review. DangerTape is a local, zero-dependency pass over the transcript so you catch:
 
 - Destructive shell (`rm -rf`, `mkfs`, `dd if=`, `curl|bash` / `wget|sh`, `chmod 777`)
-- Dangerous git (`push --force`, `reset --hard` to `main`/`master`, `clean -fdx`, `push --delete` / `:main` deleting protected remotes, `branch -D`/`-d` deleting local `main`/`master`)
+- Dangerous git (`push --force`, `reset --hard` to `main`/`master`, `clean -fdx`, `push --delete` / `:main` deleting protected remotes, `branch -D`/`-d` deleting local `main`/`master`, `stash drop`/`stash clear`)
 - Destructive SQL (`DROP`, `TRUNCATE`)
 - Secret-shaped strings in tool outputs (`sk-…`, `Bearer …`, API key assignments, `AKIA…`)
 
@@ -90,7 +90,7 @@ node bin/dangertape.js fixtures/sample-session.jsonl --fail   # exits 1
 | Category | Patterns | Typical severity |
 | --- | --- | --- |
 | shell | `rm -rf` / `-fr`, `mkfs`, `dd if=`, `curl`/`wget` piped to `sh`/`bash`, `chmod …777` / `a+rwx` | critical / high |
-| git | `git push --force` / `-f` / `--force-with-lease`, `git reset --hard` … `main`\|`master`, `git clean -fdx`, `git push --delete` / `:main`\|`:master` | critical / high |
+| git | `git push --force` / `-f` / `--force-with-lease`, `git reset --hard` … `main`\|`master`, `git clean -fdx`, `git push --delete` / `:main`\|`:master`, `git stash drop`/`clear` | critical / high |
 | sql | `DROP TABLE/DATABASE/…`, `TRUNCATE` | critical / high |
 | secret | `sk-…`, `Bearer …`, `api_key=` assignments, `AKIA…` | high / medium |
 
