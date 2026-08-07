@@ -178,6 +178,18 @@ const GIT_PATTERNS: Pattern[] = [
         t,
       ),
   },
+  {
+    id: 'git-push-mirror',
+    severity: 'critical',
+    title: 'Mirror push (can overwrite entire remote)',
+    category: 'git',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bgit\s+push\b[^\n]*\s--mirror\b/i,
+        t,
+      ),
+  },
 ]
 
 /** Destructive SQL. */

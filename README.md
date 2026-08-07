@@ -11,7 +11,7 @@ Replay **agent session** tool calls and flag destructive patterns before they be
 Agent sessions run `Shell`, `Bash`, and SQL helpers with little human review. DangerTape is a local, zero-dependency pass over the transcript so you catch:
 
 - Destructive shell (`rm -rf`, `mkfs`, `dd if=`, `curl|bash` / `wget|sh`, `chmod 777`)
-- Dangerous git (`push --force`, `reset --hard` to `main`/`master`, `clean -fdx`, `push --delete` / `:main` deleting protected remotes, `branch -D`/`-d` deleting local `main`/`master`, `stash drop`/`stash clear`)
+- Dangerous git (`push --force`, `reset --hard` to `main`/`master`, `clean -fdx`, `push --delete` / `:main` deleting protected remotes, `branch -D`/`-d` deleting local `main`/`master`, `stash drop`/`stash clear`, `push --mirror`)
 - Destructive SQL (`DROP`, `TRUNCATE`)
 - Secret-shaped strings in tool outputs (`sk-…`, `Bearer …`, API key assignments, `AKIA…`)
 
