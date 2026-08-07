@@ -118,6 +118,18 @@ const GIT_PATTERNS: Pattern[] = [
         t,
       ),
   },
+  {
+    id: 'git-delete-main-remote',
+    severity: 'critical',
+    title: 'Delete remote main/master branch',
+    category: 'git',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bgit\s+push\b[^\n]*(?:--delete\b[^\n]*\b(main|master)\b|:[^\s]*\b(main|master)\b)/i,
+        t,
+      ),
+  },
 ]
 
 /** Destructive SQL. */
