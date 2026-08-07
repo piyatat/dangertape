@@ -87,7 +87,7 @@ Exit codes:
   2  usage / I/O error
 
 Pattern pack:
-  shell   rm -rf, mkfs, dd if=
+  shell   rm -rf, mkfs, dd if=, curl|bash / wget|sh, chmod 777
   git     push --force / -f, reset --hard to main|master
   sql     DROP TABLE/DATABASE/…, TRUNCATE
   secret  sk- keys, Bearer tokens, API key assignments, AKIA…

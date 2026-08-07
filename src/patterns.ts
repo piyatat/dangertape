@@ -57,6 +57,27 @@ const SHELL_PATTERNS: Pattern[] = [
     target: 'input',
     test: (t) => matchRe(/\bdd\s+.*\bif=/i, t),
   },
+  {
+    id: 'shell-pipe-to-shell',
+    severity: 'critical',
+    title: 'Remote content piped to shell',
+    category: 'shell',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\b(curl|wget)\b[^\n|]*\|\s*(sudo\s+)?(ba)?sh\b|\b(ba)?sh\s+<\(\s*(curl|wget)\b/i,
+        t,
+      ),
+  },
+  {
+    id: 'shell-chmod-world',
+    severity: 'high',
+    title: 'World-writable chmod (777 / a+rwx)',
+    category: 'shell',
+    target: 'input',
+    test: (t) =>
+      matchRe(/\bchmod\s+(?:-[A-Za-z]+\s+)*(?:[0-7]*777|a\+rwx)\b/i, t),
+  },
 ]
 
 /** Dangerous git operations. */
