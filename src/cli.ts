@@ -91,7 +91,8 @@ Pattern pack:
   git     push --force / -f, reset --hard (discards work), restore . / checkout -- .,
           reset --hard to main|master, clean -fdx,
           push --delete / :ref deleting main|master, stash drop/clear,
-          push --mirror (overwrites remote refs)
+          push --mirror (overwrites remote refs),
+          submodule deinit --force (discards submodule worktrees)
   sql     DROP TABLE/DATABASE/…, TRUNCATE
   secret  sk- keys, Bearer tokens, API key assignments, AKIA…
 

@@ -190,6 +190,18 @@ const GIT_PATTERNS: Pattern[] = [
         t,
       ),
   },
+  {
+    id: 'git-submodule-deinit-force',
+    severity: 'high',
+    title: 'Force deinit git submodules (discards submodule worktrees)',
+    category: 'git',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bgit\s+submodule\s+deinit\b[^\n]*(?:\s--force\b|\s-f\b)/i,
+        t,
+      ),
+  },
 ]
 
 /** Destructive SQL. */
