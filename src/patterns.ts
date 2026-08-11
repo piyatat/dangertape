@@ -78,6 +78,18 @@ const SHELL_PATTERNS: Pattern[] = [
     test: (t) =>
       matchRe(/\bchmod\s+(?:-[A-Za-z]+\s+)*(?:[0-7]*777|a\+rwx)\b/i, t),
   },
+  {
+    id: 'shell-kubectl-delete-ns',
+    severity: 'critical',
+    title: 'Delete Kubernetes namespace',
+    category: 'shell',
+    target: 'input',
+    test: (t) =>
+      matchRe(
+        /\bkubectl\s+delete\s+(?:ns|namespace)\b/i,
+        t,
+      ),
+  },
 ]
 
 /** Dangerous git operations. */

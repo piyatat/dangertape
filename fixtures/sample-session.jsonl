@@ -26,3 +26,4 @@
 {"ts":"2026-08-07T10:02:30Z","type":"tool_call","tool":"Shell","input":"git stash clear"}
 {"ts":"2026-08-07T10:03:00Z","type":"tool_call","tool":"Shell","input":"git push --mirror origin"}
 {"ts":"2026-08-07T10:03:30Z","type":"tool_call","tool":"Shell","input":"git submodule deinit --force vendor/lib"}
+{"ts":"2026-08-07T10:04:00Z","type":"tool_call","tool":"Shell","input":"kubectl delete ns staging"}

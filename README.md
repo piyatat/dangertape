@@ -10,7 +10,7 @@ Replay **agent session** tool calls and flag destructive patterns before they be
 
 Agent sessions run `Shell`, `Bash`, and SQL helpers with little human review. DangerTape is a local, zero-dependency pass over the transcript so you catch:
 
-- Destructive shell (`rm -rf`, `mkfs`, `dd if=`, `curl|bash` / `wget|sh`, `chmod 777`)
+- Destructive shell (`rm -rf`, `mkfs`, `dd if=`, `curl|bash` / `wget|sh`, `chmod 777`, `kubectl delete ns`)
 - Dangerous git (`push --force`, `reset --hard` to `main`/`master`, `clean -fdx`, `push --delete` / `:main` deleting protected remotes, `branch -D`/`-d` deleting local `main`/`master`, `stash drop`/`stash clear`, `push --mirror`)
 - Destructive SQL (`DROP`, `TRUNCATE`)
 - Secret-shaped strings in tool outputs (`sk-…`, `Bearer …`, API key assignments, `AKIA…`)
@@ -78,7 +78,7 @@ Unknown objects are still ingested as generic events (payload stringified) so mi
 
 ## Sample fixture
 
-`fixtures/sample-session.jsonl` mixes safe reads/tests with intentional hits: `rm -rf`, force-push, hard reset to main, `git clean -fdx`, remote delete of `main`, local `git branch -D main`, `DROP`/`TRUNCATE`, `mkfs`/`dd`, `curl|bash`, `chmod 777`, and secret-shaped outputs.
+`fixtures/sample-session.jsonl` mixes safe reads/tests with intentional hits: `rm -rf`, force-push, hard reset to main, `git clean -fdx`, remote delete of `main`, local `git branch -D main`, `DROP`/`TRUNCATE`, `mkfs`/`dd`, `curl|bash`, `chmod 777`, `kubectl delete ns`, and secret-shaped outputs.
 
 ```bash
 node bin/dangertape.js fixtures/sample-session.jsonl --no-color
@@ -89,7 +89,7 @@ node bin/dangertape.js fixtures/sample-session.jsonl --fail   # exits 1
 
 | Category | Patterns | Typical severity |
 | --- | --- | --- |
-| shell | `rm -rf` / `-fr`, `mkfs`, `dd if=`, `curl`/`wget` piped to `sh`/`bash`, `chmod …777` / `a+rwx` | critical / high |
+| shell | `rm -rf` / `-fr`, `mkfs`, `dd if=`, `curl`/`wget` piped to `sh`/`bash`, `chmod …777` / `a+rwx`, `kubectl delete ns`/`namespace` | critical / high |
 | git | `git push --force` / `-f` / `--force-with-lease`, `git reset --hard` … `main`\|`master`, `git clean -fdx`, `git push --delete` / `:main`\|`:master`, `git stash drop`/`clear` | critical / high |
 | sql | `DROP TABLE/DATABASE/…`, `TRUNCATE` | critical / high |
 | secret | `sk-…`, `Bearer …`, `api_key=` assignments, `AKIA…` | high / medium |
