@@ -3,12 +3,13 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { analyze } from './analyze.js'
-import { ingestFile } from './ingest.js'
+import { ingestFile, ingestJsonl } from './ingest.js'
 import { formatJson, formatText } from './report.js'
 import { hasFailSeverity } from './types.js'
 
 type Args = {
   file?: string
+  stdin: boolean
   json: boolean
   fail: boolean
   color: boolean
@@ -33,6 +34,7 @@ function defaultColor(): boolean {
 
 function parseArgs(argv: string[]): Args {
   const args: Args = {
+    stdin: false,
     json: false,
     fail: false,
     color: defaultColor(),
@@ -48,10 +50,12 @@ function parseArgs(argv: string[]): Args {
     else if (a === '--fail') args.fail = true
     else if (a === '--color') args.color = true
     else if (a === '--no-color') args.color = false
-    else if (a.startsWith('-')) {
+    else if (a.startsWith('-') && a !== '-') {
       throw new Error(`Unknown flag: ${a}\nTry: dangertape --help`)
-    } else if (args.file) {
+    } else if (args.file || args.stdin) {
       throw new Error(`Unexpected argument: ${a}\nTry: dangertape --help`)
+    } else if (a === '-') {
+      args.stdin = true
     } else {
       args.file = a
     }
@@ -64,11 +68,13 @@ function helpText(): string {
 dangertape ${packageVersion()} — replay agent session tool calls; flag destructive patterns
 
 Usage:
-  dangertape [file.jsonl] [options]
+  dangertape [file.jsonl|-] [options]
+  cat session.jsonl | dangertape
 
 Arguments:
   file.jsonl              Agent transcript (JSONL). Supports normalized events
                           plus Claude-ish and Cursor-ish tool_use / tool_call shapes.
+  -                       Read transcript from stdin (also when piped with no path)
 
 Options:
       --json              Machine-readable report (CI / scripts)
@@ -84,7 +90,7 @@ Env (optional):
 Exit codes:
   0  ok (or findings below the --fail gate)
   1  --fail gate tripped (critical/high present)
-  2  usage / I/O error
+  2  usage / I/O error / empty transcript (zero events or tool calls)
 
 Pattern pack:
   shell   rm -rf, mkfs, dd if=, curl|bash / wget|sh, chmod 777
@@ -100,6 +106,7 @@ Examples:
   dangertape fixtures/sample-session.jsonl
   dangertape session.jsonl --fail
   dangertape session.jsonl --json > report.json
+  cat session.jsonl | dangertape -
 `.trim()
 }
 
@@ -144,31 +151,44 @@ function main(): void {
     return
   }
 
-  if (!args.file) {
+  const useStdin = args.stdin || !args.file
+  if (useStdin && !args.stdin && process.stdin.isTTY) {
     console.error('Missing transcript file.\nTry: dangertape --help')
     process.exitCode = 2
     return
   }
 
-  let file: string
-  try {
-    file = assertFile(args.file)
-  } catch (err) {
-    console.error(err instanceof Error ? err.message : err)
-    process.exitCode = 2
-    return
-  }
-
+  let label: string
   let events
   try {
-    events = ingestFile(file)
+    if (useStdin) {
+      label = '<stdin>'
+      events = ingestJsonl(readFileSync(0, 'utf8'))
+    } else {
+      const file = assertFile(args.file!)
+      label = file
+      events = ingestFile(file)
+    }
   } catch (err) {
     console.error(err instanceof Error ? err.message : err)
     process.exitCode = 2
     return
   }
 
-  const result = analyze(file, events)
+  if (events.length === 0) {
+    console.error('dangertape: transcript has zero events')
+    process.exitCode = 2
+    return
+  }
+
+  const toolCalls = events.filter((e) => e.kind === 'tool_call').length
+  if (toolCalls === 0) {
+    console.error('dangertape: transcript has zero tool calls')
+    process.exitCode = 2
+    return
+  }
+
+  const result = analyze(label, events)
 
   if (args.json) console.log(formatJson(result))
   else console.log(formatText(result, args.color))
